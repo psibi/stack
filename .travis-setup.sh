@@ -18,9 +18,11 @@ fetch_stack_linux() {
 # We need stack to generate cabal files with precise bounds, even for cabal
 # builds.
 mkdir -p ~/.local/bin;
+export PATH=$HOME/.local/bin/:$PATH;
 if [ `uname` = "Darwin" ]; then
   travis_retry fetch_stack_osx
 else
+
   travis_retry fetch_stack_linux
 fi
 
