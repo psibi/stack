@@ -6,18 +6,11 @@ jobs:
     matrix:
       stack-def:
         BUILD: stack
-        GHCVER: 8.2.2
         STACK_YAML: stack.yaml
-      lts-12:
-        BUILD: stack
-        GHCVER: 8.4.3
-        STACK_YAML: stack-lts-12.yaml
       nightly:
         BUILD: stack
-        GHCVER: 8.6.1
         STACK_YAML: stack-nightly.yaml
-
-    maxParallel: 3
+    maxParallel: 2
   steps:
   - script: |
       ./.travis-setup.sh
@@ -74,4 +67,35 @@ jobs:
           ;;
       esac
       set +ex
+      GHC_OPTIONS="-Werror"
+      if [ $GHCVER = 8.2.1 ]; then GHC_OPTIONS="$GHC_OPTIONS -Wno-missing-home-modules"; fi
+      set -ex
+      case "$BUILD" in
+        style)
+          hlint src/
+          hlint src/ --cpp-define=WINDOWS=1
+          hlint test/ --cpp-simple
+          ;;
+        stack)
+          stack --no-terminal test --haddock --no-haddock-deps --ghc-options="$GHC_OPTIONS"
+          ;;
+        pedantic)
+          stack --system-ghc --no-terminal build --pedantic
+          ;;
+        cabal)
+          cabal configure --enable-tests --enable-benchmarks -v2 --ghc-options="-O0 $GHC_OPTIONS"
+          cabal build
+          cabal test
+          cabal check
+          cabal sdist
+          cabal copy
+          cd test/integration
+          true stack setup --compiler=ghc-$GHCVER
+          true stack test --compiler=ghc-$GHCVER
+          cd ../..
+          SRC_TGZ=$(cabal info . | awk '{print $2;exit}').tar.gz
+          (cd dist && cabal install --force-reinstalls "$SRC_TGZ")
+        ;;
+    esac
+    set +ex
     displayName: 'Installation'
