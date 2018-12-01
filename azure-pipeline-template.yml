@@ -17,7 +17,7 @@ jobs:
     displayName: 'Setup Path'
   - script: |
       echo $OS_NAME
-      export STACK_ROOT="${Build.SourcesDirectory}"/.stack-root;
+      export STACK_ROOT="$(Build.SourcesDirectory)"/.stack-root;
       echo $STACK_ROOT
       curl -f -L "https://github.com/fpco/cache-s3/releases/download/${CACHE_S3_VERSION}/cache-s3-${CACHE_S3_VERSION}-${OS_NAME}-x86_64.tar.gz" | tar xz -C ~/.local/bin 'cache-s3';
       export PATH=$HOME/.local/bin:$PATH;
