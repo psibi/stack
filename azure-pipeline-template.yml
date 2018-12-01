@@ -16,6 +16,8 @@ jobs:
       ./.travis-setup.sh
     displayName: 'Setup Path'
   - script: |
+      echo $OS_NAME
+      echo $STACK_ROOT
       curl -f -L "https://github.com/fpco/cache-s3/releases/download/${CACHE_S3_VERSION}/cache-s3-${CACHE_S3_VERSION}-${OS_NAME}-x86_64.tar.gz" | tar xz -C /usr/local/bin 'cache-s3';
       cache-s3 --prefix="${CACHE_S3_PREFIX}"
                --git-branch="${Build.SourceBranchName}"
@@ -119,4 +121,5 @@ jobs:
                save stack work
     env:
       OS_NAME: ${{ parameters.os }}
+      STACK_ROOT: "${Build.SourcesDirectory}/.stack-root"
     displayName: 'Installation ${{parameters.os}}'
