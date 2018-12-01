@@ -1,5 +1,4 @@
 variables:
-  STACK_ROOT: "${Build.SourcesDirectory}/.stack-root"
   BASE_BRANCH: "master"
   CACHE_S3_PREFIX: "stack"
   CACHE_S3_VERSION: "v0.1.4"
