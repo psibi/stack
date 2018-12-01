@@ -17,15 +17,15 @@ jobs:
     displayName: 'Setup Path'
   - script: |
       echo $OS_NAME
-      # export STACK_ROOT="$Build.SourcesDirectory"/.stack-root";
-      # echo $STACK_ROOT
+      export STACK_ROOT="$(Build.SourcesDirectory)"/.stack-root";
+      echo $STACK_ROOT
       curl -f -L "https://github.com/fpco/cache-s3/releases/download/${CACHE_S3_VERSION}/cache-s3-${CACHE_S3_VERSION}-${OS_NAME}-x86_64.tar.gz" | tar xz -C ~/.local/bin 'cache-s3';
       cache-s3 --prefix="${CACHE_S3_PREFIX}"
-               --git-branch="${Build.SourceBranchName}"
+               --git-branch="$(Build.SourceBranchName)"
                --suffix="${OS_NAME}"
                restore stack --base-branch="${BASE_BRANCH}"
       cache-s3 --prefix="${CACHE_S3_PREFIX}"
-               --git-branch="${Build.SourceBranchName}"
+               --git-branch="$(Build.SourceBranchName)"
                --suffix="${OS_NAME}"
                restore stack work --base-branch="${BASE_BRANCH}"
       case "$BUILD" in
