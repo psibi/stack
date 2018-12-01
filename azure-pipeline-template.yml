@@ -1,3 +1,11 @@
+variables:
+  STACK_ROOT: "${Build.SourcesDirectory}/.stack-root"
+  BASE_BRANCH: "master"
+  OS_NAME: ${{ parameters.os }}
+  CACHE_S3_PREFIX: "stack"
+  S3_BUCKET: "azure-wsm-cache-ci-cache"
+  AWS_REGION: "us-east-1"
+
 jobs:
 - job: ${{ parameters.name }}
   pool:
@@ -16,6 +24,14 @@ jobs:
       ./.travis-setup.sh
     displayName: 'Setup Path'
   - script: |
+      cache-s3 --prefix="${CACHE_S3_PREFIX}"
+               --git-branch="${Build.SourceBranchName}"
+               --suffix="${OS_NAME}"
+               restore stack --base-branch="${BASE_BRANCH}"
+      cache-s3 --prefix="${CACHE_S3_PREFIX}"
+               --git-branch="${Build.SourceBranchName}"
+               --suffix="${OS_NAME}"
+               restore stack work --base-branch="${BASE_BRANCH}"
       case "$BUILD" in
         style)
           export PATH="$TRAVIS_BUILD_DIR"/hlint:$PATH -- fix this
@@ -98,4 +114,14 @@ jobs:
         ;;
       esac
       set +ex
-  displayName: 'Installation'
+     if [ "${CI_BUILD_REF_NAME}" = "${BASE_BRANCH}" ]; then
+        cache-s3 --prefix="${CACHE_S3_PREFIX}"
+                 --git-branch="${Build.SourceBranchName}"
+                 --suffix="${OS_NAME}"
+                 save stack;
+      fi;
+      cache-s3 --prefix="${CACHE_S3_PREFIX}"
+               --git-branch="${Build.SourceBranchName}"
+               --suffix="${OS_NAME}"
+               save stack work
+  displayName: 'Installation ${{parameter.os}}'
