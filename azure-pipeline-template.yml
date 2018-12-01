@@ -119,4 +119,4 @@ jobs:
                save stack work
     env:
       OS_NAME: ${{ parameters.os }}
-    displayName: 'Installation ${{parameter.os}}'
+    displayName: 'Installation ${{parameters.os}}'
