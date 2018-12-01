@@ -1,0 +1,18 @@
+jobs:
+- job: ${{ parameters.name }}
+  pool:
+    vmImage: ${{ parameters.vmImage }}
+  strategy:
+    matrix:
+      stack:
+        BUILD: stack
+        STACK_YAML: stack.yaml
+    maxParallel: 1
+  steps:
+  - script: |
+      curl -sSkL http://www.stackage.org/stack/windows-i386 -o /usr/bin/stack.zip
+      unzip -o /usr/bin/stack.zip -d /usr/bin/
+      stack setup
+      stack setup --install-cabal 2.4.1.0
+      stack --no-terminal test --jobs 1
+  displayName: 'Build'
