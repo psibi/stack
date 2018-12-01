@@ -21,14 +21,8 @@ jobs:
       echo $STACK_ROOT
       curl -f -L "https://github.com/fpco/cache-s3/releases/download/${CACHE_S3_VERSION}/cache-s3-${CACHE_S3_VERSION}-${OS_NAME}-x86_64.tar.gz" | tar xz -C ~/.local/bin 'cache-s3';
       export PATH=$HOME/.local/bin:$PATH;
-      cache-s3 --prefix="${CACHE_S3_PREFIX}"
-               --git-branch="$(pwd)"
-               --suffix="${OS_NAME}"
-               restore stack --base-branch="${BASE_BRANCH}"
-      cache-s3 --prefix="${CACHE_S3_PREFIX}"
-               --git-branch="$(pwd)"
-               --suffix="${OS_NAME}"
-               restore stack work --base-branch="${BASE_BRANCH}"
+      cache-s3 --prefix="${CACHE_S3_PREFIX}" --git-branch="$(Build.SourcesDirectory)" --suffix="${OS_NAME}" restore stack --base-branch="${BASE_BRANCH}"
+      cache-s3 --prefix="${CACHE_S3_PREFIX}" --git-branch="$(Build.SourcesDirectory)" --suffix="${OS_NAME}" restore stack work --base-branch="${BASE_BRANCH}"
       case "$BUILD" in
         style)
           export PATH="$TRAVIS_BUILD_DIR"/hlint:$PATH -- fix this
@@ -112,17 +106,11 @@ jobs:
       esac
       set +ex
       echo no
-      echo ${Build.SourceBranchName};
-      if [ "${Build.SourceBranchName}" = "${BASE_BRANCH}" ]; then
-        cache-s3 --prefix="${CACHE_S3_PREFIX}"
-                 --git-branch="${Build.SourceBranchName}"
-                 --suffix="${OS_NAME}"
-                 save stack;
+      echo $(Build.SourceBranchName);
+      if [ "$(Build.SourceBranchName)" = "${BASE_BRANCH}" ]; then
+        cache-s3 --prefix="${CACHE_S3_PREFIX}" --git-branch="$(Build.SourceBranchName)" --suffix="${OS_NAME}" save stack;
       fi;
-      cache-s3 --prefix="${CACHE_S3_PREFIX}"
-               --git-branch="${Build.SourceBranchName}"
-               --suffix="${OS_NAME}"
-               save stack work
+      cache-s3 --prefix="${CACHE_S3_PREFIX}" --git-branch="$(Build.SourceBranchName)" --suffix="${OS_NAME}" save stack work
     env:
       OS_NAME: ${{ parameters.os }}
     displayName: 'Installation ${{parameters.os}}'
