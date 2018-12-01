@@ -107,7 +107,7 @@ jobs:
         ;;
       esac
       set +ex
-     if [ "${Build.SourceBranchName}" = "${BASE_BRANCH}" ]; then
+      if [ "${Build.SourceBranchName}" = "${BASE_BRANCH}" ]; then
         cache-s3 --prefix="${CACHE_S3_PREFIX}"
                  --git-branch="${Build.SourceBranchName}"
                  --suffix="${OS_NAME}"
