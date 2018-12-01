@@ -17,9 +17,9 @@ jobs:
     displayName: 'Setup Path'
   - script: |
       echo $OS_NAME
-      export STACK_ROOT="${Build.SourcesDirectory}/.stack-root"
+      export STACK_ROOT="$Build.SourcesDirectory"/.stack-root"
       echo $STACK_ROOT
-      curl -f -L "https://github.com/fpco/cache-s3/releases/download/${CACHE_S3_VERSION}/cache-s3-${CACHE_S3_VERSION}-${OS_NAME}-x86_64.tar.gz" | tar xz -C /usr/local/bin 'cache-s3';
+      curl -f -L "https://github.com/fpco/cache-s3/releases/download/${CACHE_S3_VERSION}/cache-s3-${CACHE_S3_VERSION}-${OS_NAME}-x86_64.tar.gz" | tar xz -C ~/.local/bin 'cache-s3';
       cache-s3 --prefix="${CACHE_S3_PREFIX}"
                --git-branch="${Build.SourceBranchName}"
                --suffix="${OS_NAME}"
@@ -33,7 +33,7 @@ jobs:
           export PATH="$TRAVIS_BUILD_DIR"/hlint:$PATH -- fix this
           ;;
         cabal)
-          export PATH=$HOME/.cabal/bin:/opt/ghc/$GHCVER/bin:/opt/happy/1.19.5/bin:/opt/alex/3.1.7/bin:/opt/cabal/$CABALVER/bin:$PATH
+          export PATH=$HOME/.local/bin:$HOME/.cabal/bin:/opt/ghc/$GHCVER/bin:/opt/happy/1.19.5/bin:/opt/alex/3.1.7/bin:/opt/cabal/$CABALVER/bin:$PATH
           ;;
         *)
           export PATH=$HOME/.local/bin:/opt/ghc/$GHCVER/bin:/opt/happy/1.19.5/bin:/opt/alex/3.1.7/bin:$PATH
