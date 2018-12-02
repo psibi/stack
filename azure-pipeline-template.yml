@@ -1,9 +1,8 @@
-variables:
-- group: AWS_ACCESS_KEY_ID
-- group: AWS_SECRET_ACCESS_KEY
-
 jobs:
 - job: ${{ parameters.name }}
+  variables:
+  - group: AWS_ACCESS_KEY_ID
+  - group: AWS_SECRET_ACCESS_KEY
   pool:
     vmImage: ${{ parameters.vmImage }}
   strategy:
