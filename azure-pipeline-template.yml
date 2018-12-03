@@ -110,7 +110,7 @@ jobs:
     env:
       OS_NAME: ${{ parameters.os }}
     displayName: 'Installation ${{parameters.os}}'
-    continueOnError: eq(variables['STACK_YAML'], 'stack-nightly.yaml')
+    continueOnError: and(eq(variables['STACK_YAML'], 'stack-nightly.yaml'))
   - script: |
       export PATH=$HOME/.local/bin:$PATH;
       export AWS_ACCESS_KEY_ID="$(AWS_ACCESS_KEY_ID)";
