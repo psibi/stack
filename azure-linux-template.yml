@@ -29,6 +29,7 @@ jobs:
         AWS_ACCESS_KEY_ID
         AWS_SECRET_ACCESS_KEY
       script: |
+        echo "trig"
         mkdir -p ~/.local/bin
         curl -f -L "https://github.com/fpco/cache-s3/releases/download/${CACHE_S3_VERSION}/cache-s3-${CACHE_S3_VERSION}-${OS_NAME}-x86_64.tar.gz" -o ~/.local/bin/cache-s3.tar.gz
         tar xzf ~/.local/bin/cache-s3.tar.gz -C ~/.local/bin
