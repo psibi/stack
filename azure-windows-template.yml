@@ -40,11 +40,11 @@ jobs:
       OS_NAME: ${{ parameters.os }}
     displayName: 'Installation ${{parameters.os}}'
   - bash: |
+      export PATH=$PATH:"/C/Program Files/Mercurial/"
       hg --version
       export AWS_ACCESS_KEY_ID="$(AWS_ACCESS_KEY_ID)";
       export AWS_SECRET_ACCESS_KEY="$(AWS_SECRET_ACCESS_KEY)";
       export STACK_ROOT="$(Build.SourcesDirectory)"/.stack-root;
-      export PATH=$HOME/.local/bin:$PATH;
       if [ "$(Build.SourceBranchName)" = "${BASE_BRANCH}" ]; then
         /tmp/cache-s3 --prefix="${CACHE_S3_PREFIX}" --git-branch="$(Build.SourceBranchName)" --suffix="${OS_NAME}" save stack;
       fi;
